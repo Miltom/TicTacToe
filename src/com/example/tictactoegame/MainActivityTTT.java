@@ -3,23 +3,31 @@ package com.example.tictactoegame;
 import android.os.Bundle;
 import android.support.v4.app.Fragment;
 import android.support.v7.app.ActionBarActivity;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.TableLayout;
+import android.widget.TextView;
 
 public class MainActivityTTT extends ActionBarActivity {
 
+    private int[][] cellIds = new int[3][3];
+    
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main_activity_ttt);
 
+        
         if (savedInstanceState == null) {
             getSupportFragmentManager().beginTransaction()
                     .add(R.id.container, new PlaceholderFragment()).commit();
         }
+        // Prepare the tic tac toe table
+        initCells();
     }
     
     /** Called when the user clicks the new game*/
@@ -30,7 +38,9 @@ public class MainActivityTTT extends ActionBarActivity {
     
     /** Called when the user clicks the Startbutton on the startscreen */
     public void doStart(View view) {
+        //TODO sollte nicht jedes mal neu angepasst werden...
         setContentView(R.layout.activity_table);
+        prepareTable();
     }
     
     /** Called when the user clicks the Startbutton on the startscreen */
@@ -46,6 +56,40 @@ public class MainActivityTTT extends ActionBarActivity {
     /** Called when the user clicks the exit button */
     public void doExit(View view) {
         setContentView(R.layout.fragment_main_activity_ttt);
+    }
+    
+    
+    private void initCells(){
+        cellIds[0][0] = R.id.cell_11;
+        cellIds[0][1] = R.id.cell_12;
+        cellIds[0][2] = R.id.cell_13;
+        
+        cellIds[1][0] = R.id.cell_21;
+        cellIds[1][1] = R.id.cell_22;
+        cellIds[1][2] = R.id.cell_23;
+    
+        cellIds[2][0] = R.id.cell_31;
+        cellIds[2][1] = R.id.cell_32;
+        cellIds[2][2] = R.id.cell_33;
+    }
+
+    private void prepareTable(){
+        Log.v("start", "preparing table");
+        View sudokuTableLayout=  findViewById(R.id.ttt_table);
+        Log.v("start", ""+sudokuTableLayout);
+        
+        TableLayout tLayout = (TableLayout) sudokuTableLayout;
+        tLayout.setClickable(false);
+
+        for (int row = 0; row < 3; row++) {
+            for (int column = 0; column < 3; column++) {
+                TextView cell = (TextView) this.findViewById(cellIds[row][column]);
+                cell.setMinHeight(cell.getWidth());
+                Log.v("start", "cell: "+cell);
+                Log.v("start", cell.getWidth()+"-"+cell.getHeight());
+            }
+        }
+
     }
     
     @Override

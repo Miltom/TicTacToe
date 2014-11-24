@@ -9,6 +9,14 @@
     android:paddingTop="@dimen/activity_vertical_margin"
     tools:context="com.example.tictactoegame.MainActivityTTT$PlaceholderFragment" >
 
+    <ImageView
+        android:id="@+id/imageView1"
+        android:layout_width="30dp"
+        android:layout_height="30dp"
+        android:layout_alignParentRight="true"
+        android:contentDescription="@string/app_icon"
+        android:src="@drawable/icon" />
+    
     <TextView
         android:id="@+id/textView1"
         android:layout_width="wrap_content"
@@ -33,7 +41,6 @@
             android:id="@+id/btComputer"
             android:layout_width="wrap_content"
             android:layout_height="fill_parent"
-            android:layout_alignBottom="@+id/button1"
             android:layout_alignParentRight="true"
         	android:onClick="doStartComputerGame"
             android:text="@string/computer" />
@@ -48,6 +55,5 @@
             android:text="@string/start" />
 
     </RelativeLayout>
-
     
 </RelativeLayout>
