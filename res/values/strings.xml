@@ -4,6 +4,15 @@
     <string name="app_name">Tic Tac Toe Game</string>
     <string name="title">Tic Tac Toe Game</string>
     <string name="start">Start</string>
+    <string name="new_game">Neues Spiel</string>
+    <string name="cancel">Abbrechen</string>
+    <string name="exit">Beenden</string>
     <string name="action_settings">Settings</string>
+    <string name="player">ist an der Reihe</string>
+    <string name="computer_player">Der Computer ist an der Reihe</string>
+    <string name="you_player">Sie sind an der Reihe</string>
+    <string name="computer">Gegen Computer\n spielen</string>
+    <string name="first_name_player">Name des ersten Spielers eingeben:</string>
+    <string name="second_name_player">Name des zweiten Spielers eingeben:</string>
 
 </resources>

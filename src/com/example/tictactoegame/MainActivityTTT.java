@@ -21,15 +21,31 @@ public class MainActivityTTT extends ActionBarActivity {
                     .add(R.id.container, new PlaceholderFragment()).commit();
         }
     }
-
-    /** Called when the user clicks the Startbutton */
-    public void doStart(View view) {
-        start(view);
+    
+    /** Called when the user clicks the new game*/
+    public void doNewGame(View view) {
+        //TODO Tabelle löschen, farbzustand zurücksetzen
+        setContentView(R.layout.activity_table);
     }
     
-    public void start(View view){
+    /** Called when the user clicks the Startbutton on the startscreen */
+    public void doStart(View view) {
+        setContentView(R.layout.activity_table);
+    }
+    
+    /** Called when the user clicks the Startbutton on the startscreen */
+    public void doLogin(View view) {
+        setContentView(R.layout.activity_login);
+    }
 
-        setContentView(R.layout.activity_startscreen);
+    /** Called when the user clicks the Computerbutton on the startscreen */
+    public void doStartComputerGame(View view) {
+        setContentView(R.layout.activity_table);
+    }
+    
+    /** Called when the user clicks the exit button */
+    public void doExit(View view) {
+        setContentView(R.layout.fragment_main_activity_ttt);
     }
     
     @Override
