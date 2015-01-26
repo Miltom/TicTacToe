@@ -34,7 +34,8 @@ public class MainActivityTTT extends ActionBarActivity {
     /** Called when the user clicks the new game */
     public void doNewGame(View view) {
         // TODO Tabelle löschen, farbzustand zurücksetzen
-        setContentView(R.layout.activity_table);
+//        setContentView(R.layout.activity_table);
+        mainHelper.restart();
     }
 
     /** Called when the user clicks the Startbutton on the loginscreen */

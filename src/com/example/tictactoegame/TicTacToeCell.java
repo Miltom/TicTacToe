@@ -1,5 +1,7 @@
 package com.example.tictactoegame;
 
+import android.widget.TextView;
+
 public class TicTacToeCell {
 
     private int row;
@@ -8,11 +10,14 @@ public class TicTacToeCell {
     private TTTSigns content;
     private Player player;
     private int cellID;
+    private TextView view;
 
-    public TicTacToeCell(int row, int column, int cellID) {
+    public TicTacToeCell(int row, int column, int cellID, TextView view) {
         this.row = row;
         this.column = column;
         this.cellID = cellID;
+        this.view = view;
+
     }
 
     public int getCellID() {
@@ -22,7 +27,7 @@ public class TicTacToeCell {
     public void setCellID(int cellID) {
         this.cellID = cellID;
     }
-    
+
     public int getRow() {
         return row;
     }
@@ -61,6 +66,10 @@ public class TicTacToeCell {
 
     public void setPlayer(Player player) {
         this.player = player;
+    }
+
+    public TextView getView() {
+        return view;
     }
 
 }

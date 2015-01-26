@@ -1,5 +1,6 @@
 package com.example.tictactoegame;
 
+import android.graphics.Color;
 import android.util.Log;
 import android.util.TypedValue;
 import android.view.View;
@@ -18,10 +19,7 @@ public class MainHelper {
     public MainHelper(MainActivityTTT mainActivityTTT, int[][] cellIds) {
         this.mainActivityTTT = mainActivityTTT;
         this.cellIds = cellIds;
-        this.ttt = new TicTacToe(cellIds);
-
-        ttt.setFirstPlayer(new Player("A", R.id.firstPlayerName, TTTSigns.TTT_X));
-        ttt.setSecondPlayer(new Player("B", R.id.secondPlayerName, TTTSigns.TTT_O));
+        this.ttt = new TicTacToe(mainActivityTTT);
     }
 
     public void workNames() {
@@ -29,13 +27,14 @@ public class MainHelper {
             // TODO textfelder rot markieren
             return;
         }
-        
+
         setPlayerNames();
     }
 
     public void start() {
 
         prepareTable();
+        this.ttt.fillCellIds(cellIds);
         this.playerTextView = ((TextView) mainActivityTTT.findViewById(R.id.playerText));
         this.playerText = playerTextView.getText().toString();
         playerTextView.setText(ttt.getCurrentPlayer().getName() + " " + playerText);
@@ -68,11 +67,55 @@ public class MainHelper {
                 + ttt.getCurrentPlayer().getTttSign().getSign());
 
         view.setText(ttt.getCurrentPlayer().getTttSign().getSign());
+        if (ttt.check(view.getId()) != null) {
+            win();
+            return;
+        }
+
         ttt.changeCurrentPlayer();
 
         Log.i(TAG, ttt.getCurrentPlayer().getName());
 
         playerTextView.setText(ttt.getCurrentPlayer().getName() + " " + playerText);
+
+        if (ttt.getClicked() == 9) {
+            iterateCells(false, Color.RED);
+            playerTextView.setText("Niemand hat gewonnen");
+        }
+
+    }
+
+    private void iterateCells(boolean enabled, int color) {
+        for (int row = 0; row < 3; row++) {
+            for (int column = 0; column < 3; column++) {
+                TextView cell = (TextView) mainActivityTTT.findViewById(cellIds[row][column]);
+                cell.setEnabled(enabled);
+                cell.setBackgroundColor(color);
+            }
+        }
+    }
+    private void iterateCells(boolean enabled) {
+        for (int row = 0; row < 3; row++) {
+            for (int column = 0; column < 3; column++) {
+                TextView cell = (TextView) mainActivityTTT.findViewById(cellIds[row][column]);
+                cell.setEnabled(enabled);
+            }
+        }
+    }
+
+    private void win() {
+        Log.i(TAG, "WIN");
+        int row;
+        int[] win = ttt.getWin();
+
+        for (int i = 0; i < 3; i++) {
+            row = win[i] / 3;
+            mainActivityTTT.findViewById(cellIds[row][win[i] % 3]).setBackgroundColor(Color.GREEN);
+        }
+
+
+        playerTextView.setText(ttt.getCurrentPlayer().getName() + " hat gewonnen");
+        iterateCells(false);
     }
 
     private void setPlayerNames() {
@@ -144,5 +187,20 @@ public class MainHelper {
             }
         }
 
+    }
+
+    public void restart() {
+        for (int row = 0; row < 3; row++) {
+            for (int column = 0; column < 3; column++) {
+                TextView cell = (TextView) mainActivityTTT.findViewById(cellIds[row][column]);
+                cell.setText("");
+                cell.setBackgroundColor(Color.WHITE);
+                cell.setEnabled(true);
+                cell.setBackgroundColor(Color.WHITE);
+            }
+        }
+
+        ttt.restart();
+        playerTextView.setText(ttt.getCurrentPlayer().getName() + " " + playerText);
     }
 }
