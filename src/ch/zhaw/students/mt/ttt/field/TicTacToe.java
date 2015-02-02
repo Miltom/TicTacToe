@@ -1,23 +1,26 @@
 package ch.zhaw.students.mt.ttt.field;
 
+import java.util.Random;
 
-import ch.zhaw.students.mt.ttt.main.MainActivityTTT;
-import ch.zhaw.students.mt.ttt.player.Player;
 import android.util.Log;
 import android.widget.TextView;
+import ch.zhaw.students.mt.ttt.main.MainActivityTTT;
+import ch.zhaw.students.mt.ttt.main.MainHelper;
+import ch.zhaw.students.mt.ttt.player.APlayer;
 
 public class TicTacToe {
-    private Player firstPlayer;
-    private Player secondPlayer;
-    private Player currentPlayer;
+    private APlayer firstPlayer;
+    private APlayer secondPlayer;
+    private APlayer currentPlayer;
     private MainActivityTTT mainActivityTTT;
     private int[] win;
     private int clicked;
-    private static final String TAG = "TicTacToe::MainHelper";
-
+    private static final String TAG = "TicTacToe::TicTacToe";
+    private MainHelper mh;
     private TicTacToeCell[][] cells;
 
-    public TicTacToe(MainActivityTTT mainActivityTTT) {
+    public TicTacToe(MainActivityTTT mainActivityTTT, MainHelper mh) {
+        this.mh = mh;
         this.mainActivityTTT = mainActivityTTT;
         this.cells = new TicTacToeCell[3][3];
         this.win = new int[3];
@@ -33,7 +36,7 @@ public class TicTacToe {
         }
     }
 
-    public Player getCurrentPlayer() {
+    public APlayer getCurrentPlayer() {
         if (currentPlayer == null) {
             currentPlayer = firstPlayer;
         }
@@ -47,21 +50,63 @@ public class TicTacToe {
             currentPlayer = firstPlayer;
         } else {
             currentPlayer = secondPlayer;
+            if (currentPlayer.automaticPlay()) {
+                automaticPlay();
+            }
         }
-        
+        System.out.println(currentPlayer);
+
+    }
+
+    private void automaticPlay() {
+        if (clicked == 9) {
+            return;
+        }
+        // Random
+        Random randomGenerator = new Random();
+        int randomInt;
+        TextView textView = null;
+        Log.i(TAG, "FIRST: " + (cells[0][0].getContent()));
+        Log.i(TAG,
+                "FIRST: "
+                        + ((TextView) mainActivityTTT.findViewById(cells[0][0].getCellID()))
+                                .getText());
+
+        while (true) {
+            randomInt = randomGenerator.nextInt(9);
+            Log.i(TAG, "randomInt: " + randomInt);
+            Log.i(TAG, "cells[randomInt / 3][randomInt % 3]: "
+                    + cells[randomInt / 3][randomInt % 3]+"-"+(cells[randomInt / 3][randomInt % 3].getContent()));
+            if (cells[randomInt / 3][randomInt % 3].getContent() == null) {
+                textView = ((TextView) mainActivityTTT
+                        .findViewById(cells[randomInt / 3][randomInt % 3].getCellID()));
+                // textView.setText(currentPlayer.getTttSign().getSign());
+                break;
+            }
+        }
+
+        mh.change(textView);
     }
 
     public void restart() {
+        Log.i(TAG, "Restart");
         this.currentPlayer = firstPlayer;
-        this.win = new int [3];
+        this.win = new int[3];
         this.clicked = 0;
+
+        for (int row = 0; row < 3; row++) {
+            for (int col = 0; col < 3; col++) {
+                cells[row][col].setContent(null);
+            }
+        }
+
     }
 
-    public void setFirstPlayer(Player firstPlayer) {
+    public void setFirstPlayer(APlayer firstPlayer) {
         this.firstPlayer = firstPlayer;
     }
 
-    public void setSecondPlayer(Player secondPlayer) {
+    public void setSecondPlayer(APlayer secondPlayer) {
         this.secondPlayer = secondPlayer;
     }
 
@@ -76,6 +121,7 @@ public class TicTacToe {
                     row = i;
                     column = j;
                     view = cells[i][j].getView();
+                    cells[i][j].setContent(TTTSigns.getSign(view.getText().toString()));
                     break;
                 }
             }
@@ -137,9 +183,9 @@ public class TicTacToe {
                 return false;
             }
         }
-        win[0] = row*3;
-        win[1] = row*3 + 1;
-        win[2] = row*3 + 2;
+        win[0] = row * 3;
+        win[1] = row * 3 + 1;
+        win[2] = row * 3 + 2;
         return true;
     }
 
@@ -162,8 +208,9 @@ public class TicTacToe {
     public int[] getWin() {
         return win;
     }
-    
+
     public int getClicked() {
         return clicked;
     }
+
 }

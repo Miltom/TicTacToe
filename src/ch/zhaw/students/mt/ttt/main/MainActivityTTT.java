@@ -1,10 +1,5 @@
 package ch.zhaw.students.mt.ttt.main;
 
-import com.example.tictactoegame.R;
-import com.example.tictactoegame.R.id;
-import com.example.tictactoegame.R.layout;
-import com.example.tictactoegame.R.menu;
-
 import android.os.Bundle;
 import android.support.v4.app.Fragment;
 import android.support.v7.app.ActionBarActivity;
@@ -15,13 +10,15 @@ import android.view.MenuItem;
 import android.view.View;
 import android.view.ViewGroup;
 
+import com.example.tictactoegame.R;
+
 public class MainActivityTTT extends ActionBarActivity {
     private static final String TAG = "TicTacToe::MainActivityTTT";
     
     private int[][] cellIds = new int[3][3];
     private MainHelper mainHelper;
 
-    //TODO ttt table should be fixed after clicking
+    //TODO ttt table should be fixed after clicking, abwechselnd starten
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -29,7 +26,7 @@ public class MainActivityTTT extends ActionBarActivity {
         mainHelper = new MainHelper(this, cellIds);
         
         Log.i(TAG, "Initialyze mainHelper");
-
+ 
         if (savedInstanceState == null) {
             getSupportFragmentManager().beginTransaction()
                     .add(R.id.container, new PlaceholderFragment()).commit();
@@ -58,11 +55,14 @@ public class MainActivityTTT extends ActionBarActivity {
 
     /** Called when the user clicks the Computerbutton on the startscreen */
     public void doStartComputerGame(View view) {
+        mainHelper.playAgainstComputer();
         setContentView(R.layout.activity_table);
+        mainHelper.start();
     }
 
     /** Called when the user clicks the exit button */
     public void doExit(View view) {
+        mainHelper.restart();
         setContentView(R.layout.fragment_main_activity_ttt);
     }
 

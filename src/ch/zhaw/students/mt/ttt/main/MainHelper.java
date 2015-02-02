@@ -7,6 +7,7 @@ import android.widget.TableLayout;
 import android.widget.TextView;
 import ch.zhaw.students.mt.ttt.field.TTTSigns;
 import ch.zhaw.students.mt.ttt.field.TicTacToe;
+import ch.zhaw.students.mt.ttt.player.Computer;
 import ch.zhaw.students.mt.ttt.player.Player;
 
 import com.example.tictactoegame.R;
@@ -23,41 +24,42 @@ public class MainHelper {
     public MainHelper(MainActivityTTT mainActivityTTT, int[][] cellIds) {
         this.mainActivityTTT = mainActivityTTT;
         this.cellIds = cellIds;
-        this.ttt = new TicTacToe(mainActivityTTT);
+        this.ttt = new TicTacToe(mainActivityTTT, this);
     }
 
     public void start() {
         prepareTable();
-        
+
         this.ttt.fillCellIds(cellIds);
+        this.ttt.restart();
         this.playerTextView = ((TextView) mainActivityTTT.findViewById(R.id.playerText));
         this.playerText = playerTextView.getText().toString();
         playerTextView.setText(ttt.getCurrentPlayer().getName() + " " + playerText);
 
     }
 
-    private void change(View v) {
+    public void change(View v) {
         TextView view = (TextView) v;
 
         if (!view.getText().equals("")) {
+            System.out.println("irgendeintex");
             return;
         }
-        
+
         view.setText(ttt.getCurrentPlayer().getTttSign().getSign());
-        
+
         if (ttt.check(view.getId()) != null) {
             win();
             return;
         }
 
-        ttt.changeCurrentPlayer();
-        playerTextView.setText(ttt.getCurrentPlayer().getName() + " " + playerText);
-
         if (ttt.getClicked() == 9) {
             iterateCells(false, Color.RED);
             playerTextView.setText("Niemand hat gewonnen");
         }
-
+      
+        ttt.changeCurrentPlayer();
+        playerTextView.setText(ttt.getCurrentPlayer().getName() + " " + playerText);
     }
 
     private void iterateCells(boolean enabled, int color) {
@@ -69,7 +71,7 @@ public class MainHelper {
             }
         }
     }
-    
+
     private void iterateCells(boolean enabled) {
         for (int row = 0; row < 3; row++) {
             for (int column = 0; column < 3; column++) {
@@ -81,21 +83,20 @@ public class MainHelper {
 
     private void win() {
         int row;
-        int[] win = ttt.getWin();
+        int[] winIndex = ttt.getWin();
 
         for (int i = 0; i < 3; i++) {
-            row = win[i] / 3;
-            mainActivityTTT.findViewById(cellIds[row][win[i] % 3]).setBackgroundColor(Color.GREEN);
+            row = winIndex[i] / 3;
+            mainActivityTTT.findViewById(cellIds[row][winIndex[i] % 3]).setBackgroundColor(Color.GREEN);
         }
-
 
         playerTextView.setText(ttt.getCurrentPlayer().getName() + " hat gewonnen");
         iterateCells(false);
     }
 
-    public  void createPlayer() {
+    public void createPlayer() {
         checkPlayersNames();
-        
+
         String firstPlayerName = ((TextView) mainActivityTTT.findViewById(R.id.firstPlayerName))
                 .getText().toString();
         String secondPlayerName = ((TextView) mainActivityTTT.findViewById(R.id.secondPlayerName))
@@ -109,18 +110,17 @@ public class MainHelper {
     private void checkPlayersNames() {
         Log.i(TAG, "validPlayersNames");
 
-        if (((TextView) mainActivityTTT.findViewById(R.id.firstPlayerName))
-                .getText().toString().equals("")) {
+        if (((TextView) mainActivityTTT.findViewById(R.id.firstPlayerName)).getText().toString()
+                .equals("")) {
             ((TextView) mainActivityTTT.findViewById(R.id.firstPlayerName)).setText("Spieler 1");
         }
 
-        if (((TextView) mainActivityTTT.findViewById(R.id.secondPlayerName))
-                .getText().toString().equals("")) {
+        if (((TextView) mainActivityTTT.findViewById(R.id.secondPlayerName)).getText().toString()
+                .equals("")) {
             ((TextView) mainActivityTTT.findViewById(R.id.secondPlayerName)).setText("Spieler 2");
         }
 
     }
-
 
     public void initCells() {
         cellIds[0][0] = R.id.cell_11;
@@ -146,6 +146,7 @@ public class MainHelper {
             for (int column = 0; column < 3; column++) {
                 TextView cell = (TextView) mainActivityTTT.findViewById(cellIds[row][column]);
                 cell.setMinHeight(cell.getWidth());
+                cell.setText("");
                 cell.setOnClickListener(new View.OnClickListener() {
 
                     @Override
@@ -153,6 +154,7 @@ public class MainHelper {
                         change(v);
                     }
                 });
+
             }
         }
 
@@ -162,9 +164,8 @@ public class MainHelper {
         for (int row = 0; row < 3; row++) {
             for (int column = 0; column < 3; column++) {
                 TextView cell = (TextView) mainActivityTTT.findViewById(cellIds[row][column]);
-                cell.setText("");
-                cell.setBackgroundColor(Color.WHITE);
                 cell.setEnabled(true);
+                cell.setText(" ");
                 cell.setBackgroundColor(Color.WHITE);
             }
         }
@@ -172,5 +173,10 @@ public class MainHelper {
         ttt.restart();
         playerTextView.setText(ttt.getCurrentPlayer().getName() + " " + playerText);
     }
-    
+
+    public void playAgainstComputer() {
+        ttt.setFirstPlayer(new Player("Du", R.id.firstPlayerName, TTTSigns.TTT_X));
+        ttt.setSecondPlayer(new Computer("Computer", R.id.secondPlayerName, TTTSigns.TTT_O));
+    }
+
 }
